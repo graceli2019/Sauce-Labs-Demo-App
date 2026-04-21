@@ -48,14 +48,15 @@ TC04 - Cart persists after navigating away and returning
   And navigates back to the cart page
   Then both items should still be listed in the cart
 
-TC05 - Logout clears session and cart is reset on next login
+TC05 - Cart persists after logout and re-login
   Given the user logs in as standard_user
   And adds Sauce Labs Backpack to the cart
   And the cart badge shows 1
   When the user logs out via the burger menu
   Then the user should be redirected to the login page
   When the user logs back in as standard_user
-  Then the cart badge should not be visible
+  Then the cart badge should still show 1
+  Note: The Sauce Demo app retains cart state across sessions — logout does NOT clear the cart
 
 ──────────────────────────────────────────────────────
   Alternative Users

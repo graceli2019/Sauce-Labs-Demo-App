@@ -75,7 +75,7 @@ test.describe('End-to-End Journeys', () => { // group all cross-feature E2E test
     await expect(cartPage.cartItemNames.filter({ hasText: PRODUCTS.onesie })).toBeVisible(); // assert Onesie is still in cart
   });
 
-  test('TC05 - Logout clears session and cart is reset on next login', async ({
+  test('TC05 - Cart persists after logout and re-login', async ({
     page, inventoryPage, cartPage
   }) => {
     await loginAsStandardUser(page); // log in as standard user
@@ -84,7 +84,7 @@ test.describe('End-to-End Journeys', () => { // group all cross-feature E2E test
     await inventoryPage.logout(); // log out via the burger menu
     await expect(page).toHaveURL('/'); // assert redirected to the login page
     await loginAsStandardUser(page); // log back in as the same user
-    await expect(inventoryPage.cartBadge).not.toBeVisible(); // assert cart badge is gone — session was cleared on logout
+    await expect(inventoryPage.cartBadge).toHaveText('1'); // assert cart badge still shows 1 — Sauce Demo retains cart state across sessions
   });
 
   // ── Alternative Users ──────────────────────────────────────────────────────
