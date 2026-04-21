@@ -1,5 +1,7 @@
 # Sauce Labs Demo App — Playwright Test Framework
 
+[![Playwright Tests](https://github.com/graceli2019/Sauce-Labs-Demo-App/actions/workflows/playwright.yml/badge.svg)](https://github.com/graceli2019/Sauce-Labs-Demo-App/actions/workflows/playwright.yml)
+
 An end-to-end test automation framework for [saucedemo.com](https://www.saucedemo.com), built with [Playwright](https://playwright.dev) and TypeScript using the **Page Object Model (POM)** pattern.
 
 ---
