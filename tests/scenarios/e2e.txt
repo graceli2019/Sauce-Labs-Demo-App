@@ -1,0 +1,79 @@
+======================================================
+  TEST SCENARIOS — End-to-End Journeys (e2e.spec.ts)
+======================================================
+
+Covers: Cross-feature user journeys that span multiple pages and features.
+These tests validate complete workflows from login through to order confirmation,
+as well as session state, cart persistence, and multi-user behaviour.
+Precondition: None — each test starts from the login page.
+
+──────────────────────────────────────────────────────
+  Full Purchase Flow
+──────────────────────────────────────────────────────
+
+TC01 - Sort products then purchase the cheapest item
+  Given the user logs in as standard_user
+  When the user sorts products by price low to high
+  And adds the first (cheapest) product to the cart
+  And proceeds through cart → checkout step one → step two
+  And fills in valid customer info and clicks Finish
+  Then the order confirmation page should display 'Thank you for your order!'
+
+TC02 - Purchase item navigated to from product detail page
+  Given the user logs in as standard_user
+  When the user clicks on the Fleece Jacket product to open the detail page
+  And adds the item to cart from the detail page
+  And navigates to cart via the cart icon
+  And proceeds through checkout step one → step two and clicks Finish
+  Then the order confirmation page should display 'Thank you for your order!'
+
+TC03 - Purchase multiple items then verify cart is empty after order
+  Given the user logs in as standard_user
+  When the user adds Sauce Labs Backpack, Bike Light, and Bolt T-Shirt to the cart
+  Then the cart badge should show 3
+  When the user proceeds through cart → checkout step one → step two
+  Then the order summary should list all 3 items
+  When the user clicks Finish and then Back Home
+  Then the user should be on the inventory page
+  And the cart badge should not be visible
+
+──────────────────────────────────────────────────────
+  Session & State
+──────────────────────────────────────────────────────
+
+TC04 - Cart persists after navigating away and returning
+  Given the user logs in as standard_user
+  And adds Sauce Labs Backpack and Onesie to the cart
+  When the user navigates to cart then clicks Continue Shopping
+  And navigates back to the cart page
+  Then both items should still be listed in the cart
+
+TC05 - Logout clears session and cart is reset on next login
+  Given the user logs in as standard_user
+  And adds Sauce Labs Backpack to the cart
+  And the cart badge shows 1
+  When the user logs out via the burger menu
+  Then the user should be redirected to the login page
+  When the user logs back in as standard_user
+  Then the cart badge should not be visible
+
+──────────────────────────────────────────────────────
+  Alternative Users
+──────────────────────────────────────────────────────
+
+TC06 - Performance glitch user can complete full checkout
+  Given the user logs in as performance_glitch_user
+  When the user adds Sauce Labs Backpack to the cart
+  And proceeds through cart → checkout step one → step two and clicks Finish
+  Then the order confirmation page should display 'Thank you for your order!'
+  Note: Login and page transitions may be noticeably slower for this user
+
+TC07 - Visual user sees correct product names in cart and order summary
+  Given the user logs in as visual_user
+  When the user adds Sauce Labs Backpack to the cart
+  And navigates to the cart page
+  Then the cart should display 'Sauce Labs Backpack' as the item name
+  When the user proceeds to checkout step one and fills in valid customer info
+  And continues to step two
+  Then the order summary should display 'Sauce Labs Backpack' as the item name
+  Note: The visual_user may display UI anomalies but core data should remain correct

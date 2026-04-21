@@ -1,0 +1,70 @@
+======================================================
+  TEST SCENARIOS — Cart Page (cart.spec.ts)
+======================================================
+
+Precondition: User is logged in as standard_user.
+
+──────────────────────────────────────────────────────
+  UI Visibility
+──────────────────────────────────────────────────────
+
+TC01 - Cart page displays correct title
+  Given the user navigates to the cart page
+  Then the page title should display 'Your Cart'
+
+TC02 - Empty cart shows no items
+  Given the user has not added any items to the cart
+  When the user navigates to the cart page
+  Then no cart items should be displayed
+
+TC03 - Cart page displays added items correctly
+  Given the user has added 'Sauce Labs Backpack' to the cart
+  When the user navigates to the cart page
+  Then 'Sauce Labs Backpack' should be listed with quantity '1' and its correct price
+
+──────────────────────────────────────────────────────
+  Item Management
+──────────────────────────────────────────────────────
+
+TC04 - Cart shows correct count for multiple items
+  Given the user has added 'Sauce Labs Backpack' and 'Sauce Labs Bike Light'
+  When the user navigates to the cart page
+  Then 2 items should be listed in the cart
+  And the cart badge should show '2'
+
+TC05 - Remove a single item from cart
+  Given the user has added 'Sauce Labs Backpack' to the cart
+  And the user is on the cart page
+  When the user clicks 'Remove' on 'Sauce Labs Backpack'
+  Then the item should be removed from the cart
+  And the cart badge should disappear
+
+TC06 - Remove one of multiple items from cart
+  Given the user has added 'Sauce Labs Backpack' and 'Sauce Labs Bike Light' to the cart
+  And the user is on the cart page
+  When the user clicks 'Remove' on 'Sauce Labs Backpack'
+  Then only 'Sauce Labs Bike Light' should remain in the cart
+  And the cart badge should show '1'
+
+──────────────────────────────────────────────────────
+  Navigation
+──────────────────────────────────────────────────────
+
+TC07 - Continue Shopping button returns to inventory page
+  Given the user is on the cart page
+  When the user clicks 'Continue Shopping'
+  Then the user should be navigated back to the inventory page
+  And the page title should display 'Products'
+
+TC08 - Previously added items are retained after continuing shopping
+  Given the user has added 'Sauce Labs Backpack' to the cart
+  And the user clicks 'Continue Shopping' from the cart page
+  When the user navigates back to the cart page
+  Then 'Sauce Labs Backpack' should still be in the cart
+
+TC09 - Checkout button navigates to checkout step one
+  Given the user has added at least one item to the cart
+  And the user is on the cart page
+  When the user clicks 'Checkout'
+  Then the user should be navigated to the checkout information page
+  And the page title should display 'Checkout: Your Information'

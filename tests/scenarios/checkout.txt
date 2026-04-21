@@ -1,0 +1,128 @@
+======================================================
+  TEST SCENARIOS — Checkout (checkout.spec.ts)
+======================================================
+
+Covers: Checkout Step One (info form), Step Two (order summary), Checkout Complete.
+Precondition: User is logged in as standard_user and has at least one item in the cart.
+
+──────────────────────────────────────────────────────
+  Checkout Step One — UI Visibility
+──────────────────────────────────────────────────────
+
+TC01 - Checkout step one displays correct title and form fields
+  Given the user proceeds to checkout from the cart page
+  Then the page title should display 'Checkout: Your Information'
+  And the first name, last name, and postal code fields should be visible
+  And the Cancel and Continue buttons should be visible
+
+──────────────────────────────────────────────────────
+  Checkout Step One — Form Validation
+──────────────────────────────────────────────────────
+
+TC02 - Continue with all fields empty shows error
+  Given the user is on checkout step one
+  When the user clicks Continue without filling in any fields
+  Then an error message should display 'Error: First Name is required'
+
+TC03 - Continue with missing first name shows error
+  Given the user is on checkout step one
+  When the user fills in last name and postal code but leaves first name empty
+  And clicks Continue
+  Then an error message should display 'Error: First Name is required'
+
+TC04 - Continue with missing last name shows error
+  Given the user is on checkout step one
+  When the user fills in first name and postal code but leaves last name empty
+  And clicks Continue
+  Then an error message should display 'Error: Last Name is required'
+
+TC05 - Continue with missing postal code shows error
+  Given the user is on checkout step one
+  When the user fills in first name and last name but leaves postal code empty
+  And clicks Continue
+  Then an error message should display 'Error: Postal Code is required'
+
+TC06 - Continue with all fields filled navigates to step two
+  Given the user is on checkout step one
+  When the user fills in valid first name, last name, and postal code
+  And clicks Continue
+  Then the user should be navigated to checkout step two
+  And the page title should display 'Checkout: Overview'
+
+──────────────────────────────────────────────────────
+  Checkout Step One — Navigation
+──────────────────────────────────────────────────────
+
+TC07 - Cancel on step one returns to cart page
+  Given the user is on checkout step one
+  When the user clicks Cancel
+  Then the user should be navigated back to the cart page
+  And the page title should display 'Your Cart'
+
+──────────────────────────────────────────────────────
+  Checkout Step Two — UI Visibility
+──────────────────────────────────────────────────────
+
+TC08 - Checkout step two displays correct title and order summary
+  Given the user has completed step one with valid info
+  Then the page title should display 'Checkout: Overview'
+  And the ordered items, subtotal, tax, and total should all be visible
+  And the Cancel and Finish buttons should be visible
+
+TC09 - Order summary shows correct items
+  Given the user added 'Sauce Labs Backpack' and 'Sauce Labs Bike Light' to the cart
+  And the user has completed step one
+  Then both items should appear in the order summary on step two
+
+TC10 - Order summary shows correct subtotal
+  Given the user added 'Sauce Labs Backpack' ($29.99) and 'Sauce Labs Bike Light' ($9.99)
+  And the user has completed step one
+  Then the subtotal label should display 'Item total: $39.98'
+
+TC11 - Order summary shows correct total (subtotal + tax)
+  Given the user is on checkout step two
+  Then the total label should equal the subtotal plus the tax amount
+
+──────────────────────────────────────────────────────
+  Checkout Step Two — Navigation
+──────────────────────────────────────────────────────
+
+TC12 - Cancel on step two returns to inventory page
+  Given the user is on checkout step two
+  When the user clicks Cancel
+  Then the user should be navigated back to the inventory page
+  And the page title should display 'Products'
+
+TC13 - Finish button completes the order
+  Given the user is on checkout step two
+  When the user clicks Finish
+  Then the user should be navigated to the checkout complete page
+  And the page title should display 'Checkout: Complete!'
+
+──────────────────────────────────────────────────────
+  Checkout Complete
+──────────────────────────────────────────────────────
+
+TC14 - Checkout complete page displays confirmation message
+  Given the user has clicked Finish on checkout step two
+  Then the confirmation header should display 'Thank you for your order!'
+  And the confirmation text and pony express image should be visible
+
+TC15 - Back Home button returns to inventory page
+  Given the user is on the checkout complete page
+  When the user clicks 'Back Home'
+  Then the user should be navigated back to the inventory page
+  And the page title should display 'Products'
+  And the cart badge should no longer be visible
+
+──────────────────────────────────────────────────────
+  End-to-End Happy Path
+──────────────────────────────────────────────────────
+
+TC16 - Complete full checkout flow from login to order confirmation
+  Given the user logs in as standard_user
+  And adds 'Sauce Labs Backpack' to the cart
+  And proceeds to checkout
+  And fills in valid customer info
+  And clicks Continue then Finish
+  Then the confirmation page should display 'Thank you for your order!'

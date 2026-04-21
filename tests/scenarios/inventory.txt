@@ -1,0 +1,80 @@
+======================================================
+  TEST SCENARIOS — Inventory Page (inventory.spec.ts)
+======================================================
+
+Precondition: User is logged in as standard_user and on the inventory page.
+
+──────────────────────────────────────────────────────
+  UI Visibility
+──────────────────────────────────────────────────────
+
+TC01 - Inventory page displays correct title
+  Given the user is on the inventory page
+  Then the page title should display 'Products'
+
+TC02 - Inventory page displays 6 products
+  Given the user is on the inventory page
+  Then 6 product cards should be displayed
+
+TC03 - Each product card displays name, price and Add to Cart button
+  Given the user is on the inventory page
+  Then each product card should have a visible name, price, and 'Add to cart' button
+
+──────────────────────────────────────────────────────
+  Sorting
+──────────────────────────────────────────────────────
+
+TC04 - Products are sorted A-Z by default
+  Given the user is on the inventory page
+  Then the product names should be sorted in A-Z order by default
+
+TC05 - Sort products by name Z-A
+  Given the user is on the inventory page
+  When the user selects 'Name (Z to A)' from the sort dropdown
+  Then the product names should be displayed in Z-A order
+
+TC06 - Sort products by price low to high
+  Given the user is on the inventory page
+  When the user selects 'Price (low to high)' from the sort dropdown
+  Then the product prices should be displayed in ascending order
+
+TC07 - Sort products by price high to low
+  Given the user is on the inventory page
+  When the user selects 'Price (high to low)' from the sort dropdown
+  Then the product prices should be displayed in descending order
+
+──────────────────────────────────────────────────────
+  Add to Cart
+──────────────────────────────────────────────────────
+
+TC08 - Add a single item to cart from inventory page
+  Given the user is on the inventory page
+  When the user clicks 'Add to cart' for 'Sauce Labs Backpack'
+  Then the cart badge should show '1'
+  And the button should change to 'Remove'
+
+TC09 - Add multiple items to cart from inventory page
+  Given the user is on the inventory page
+  When the user adds 'Sauce Labs Backpack' and 'Sauce Labs Bike Light' to the cart
+  Then the cart badge should show '2'
+
+TC10 - Remove an item from cart via inventory page
+  Given the user has added 'Sauce Labs Backpack' to the cart
+  When the user clicks 'Remove' on that product card
+  Then the cart badge should disappear
+  And the button should change back to 'Add to cart'
+
+──────────────────────────────────────────────────────
+  Navigation
+──────────────────────────────────────────────────────
+
+TC11 - Click product name navigates to product detail page
+  Given the user is on the inventory page
+  When the user clicks on 'Sauce Labs Backpack'
+  Then the user should be navigated to the product detail page
+  And the product name on the detail page should match 'Sauce Labs Backpack'
+
+TC12 - Navigate to cart via cart icon
+  Given the user is on the inventory page
+  When the user clicks the cart icon in the header
+  Then the user should be navigated to the cart page
