@@ -1,6 +1,6 @@
 import { Page, Locator } from '@playwright/test'; // import Page and Locator types from Playwright
 
-export class LoginPage { // page object for the login page — does not extend BasePage as it has no header
+export class LoginPage { // page object class for the login page — does not extend BasePage as it has no header
   readonly page: Page; // holds the Playwright browser page instance
 
   readonly usernameInput: Locator; // username text input field
