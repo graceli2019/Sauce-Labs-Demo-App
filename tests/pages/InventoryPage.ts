@@ -11,11 +11,11 @@ export class InventoryPage extends BasePage { // page object for the products li
   constructor(page: Page) {
     super(page); // call BasePage constructor to initialise shared header and burger menu locators
 
-    this.pageTitle = page.locator('.title'); // locate page title by its CSS class
-    this.sortDropdown = page.locator('[data-test="product-sort-container"]'); // locate sort dropdown by data-test attribute
-    this.inventoryItems = page.locator('.inventory_item'); // locate all product cards — returns a list of elements
-    this.inventoryItemNames = page.locator('.inventory_item_name'); // locate all product name links
-    this.inventoryItemPrices = page.locator('.inventory_item_price'); // locate all product price labels
+    this.pageTitle = page.getByTestId('title'); // locate page title by stable test id
+    this.sortDropdown = page.getByTestId('product-sort-container'); // locate sort dropdown by stable test id
+    this.inventoryItems = page.getByTestId('inventory-item'); // locate all product cards by stable test id
+    this.inventoryItemNames = page.getByTestId('inventory-item-name'); // locate all product names by stable test id
+    this.inventoryItemPrices = page.getByTestId('inventory-item-price'); // locate all product prices by stable test id
   }
 
   /** Navigates directly to the inventory/products page (/inventory.html). */
@@ -31,18 +31,18 @@ export class InventoryPage extends BasePage { // page object for the products li
   /** Finds a product card by name and clicks its Add to Cart button. */
   async addItemToCartByName(itemName: string): Promise<void> {
     const item = this.inventoryItems.filter({ hasText: itemName }); // filter all product cards to find the one matching the given name
-    await item.locator('button[data-test^="add-to-cart"]').click(); // click the Add to Cart button inside that card
+    await item.getByRole('button', { name: 'Add to cart' }).click(); // click the Add to Cart button inside that card
   }
 
   /** Finds a product card by name and clicks its Remove button to remove it from the cart. */
   async removeItemFromCartByName(itemName: string): Promise<void> {
     const item = this.inventoryItems.filter({ hasText: itemName }); // filter all product cards to find the one matching the given name
-    await item.locator('button[data-test^="remove"]').click(); // click the Remove button inside that card
+    await item.getByRole('button', { name: 'Remove' }).click(); // click the Remove button inside that card
   }
 
   /** Clicks the product name link to navigate to that product's detail page. */
   async clickItemByName(itemName: string): Promise<void> {
-    await this.inventoryItemNames.filter({ hasText: itemName }).click(); // filter name links by text and click the matching one
+    await this.inventoryItemNames.filter({ hasText: itemName }).first().click(); // click the matching product title link (not the image link)
   }
 
   /** Returns the total number of product cards displayed on the inventory page. */

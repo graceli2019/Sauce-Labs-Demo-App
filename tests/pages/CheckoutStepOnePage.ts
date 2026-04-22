@@ -13,13 +13,13 @@ export class CheckoutStepOnePage extends BasePage { // page object for checkout 
   constructor(page: Page) {
     super(page); // call BasePage constructor to initialise shared header and burger menu locators
 
-    this.pageTitle = page.locator('.title'); // locate page title by its CSS class
-    this.firstNameInput = page.locator('[data-test="firstName"]'); // locate first name input by data-test attribute
-    this.lastNameInput = page.locator('[data-test="lastName"]'); // locate last name input by data-test attribute
-    this.postalCodeInput = page.locator('[data-test="postalCode"]'); // locate postal code input by data-test attribute
-    this.cancelButton = page.locator('[data-test="cancel"]'); // locate Cancel button by data-test attribute
-    this.continueButton = page.locator('[data-test="continue"]'); // locate Continue button by data-test attribute
-    this.errorMessage = page.locator('[data-test="error"]'); // locate error message by data-test attribute
+    this.pageTitle = page.getByTestId('title'); // locate page title by stable test id
+    this.firstNameInput = page.getByPlaceholder('First Name'); // locate first name input by placeholder text
+    this.lastNameInput = page.getByPlaceholder('Last Name'); // locate last name input by placeholder text
+    this.postalCodeInput = page.getByPlaceholder('Zip/Postal Code'); // locate postal code input by placeholder text
+    this.cancelButton = page.getByRole('button', { name: 'Cancel' }); // locate Cancel button by role and name
+    this.continueButton = page.getByRole('button', { name: 'Continue' }); // locate Continue button by role and name
+    this.errorMessage = page.getByRole('heading', { name: /error:/i }); // locate checkout error banner by heading text prefix
   }
 
   /** Fills in the first name, last name, and postal code fields on the checkout info form. */

@@ -44,7 +44,7 @@ test.describe('Inventory Item Page', () => { // group all product detail page te
     await inventoryItemPage.addToCart(); // add Sauce Labs Backpack from the detail page
     await inventoryItemPage.backToProducts(); // navigate back to inventory page
     const item = inventoryPage.inventoryItems.filter({ hasText: PRODUCTS.backpack }); // find the backpack product card
-    await expect(item.locator('button[data-test^="remove"]')).toBeVisible(); // assert button shows Remove on inventory page too
+    await expect(item.getByRole('button', { name: 'Remove' })).toBeVisible(); // assert button shows Remove on inventory page too
     await expect(inventoryPage.cartBadge).toHaveText('1'); // assert cart badge shows 1 on inventory page
   });
 

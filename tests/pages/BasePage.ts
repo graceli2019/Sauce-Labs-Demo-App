@@ -17,14 +17,14 @@ export class BasePage { // base class shared by all pages that have a header and
   constructor(page: Page) { // constructor receives the Playwright page and stores it for all locators
     this.page = page; // save the page reference so child classes can access it via this.page
 
-    this.cartIcon = page.locator('.shopping_cart_link'); // locate cart icon by its CSS class
-    this.cartBadge = page.locator('.shopping_cart_badge'); // locate cart count badge by its CSS class
+    this.cartIcon = page.getByTestId('shopping-cart-link'); // locate cart icon by stable test id
+    this.cartBadge = page.getByTestId('shopping-cart-badge'); // locate cart count badge by stable test id
 
-    this.burgerMenuButton = page.locator('#react-burger-menu-btn'); // locate burger menu button by its ID
-    this.burgerMenuAllItems = page.locator('#inventory_sidebar_link'); // locate All Items link by its ID
-    this.burgerMenuAbout = page.locator('#about_sidebar_link'); // locate About link by its ID
-    this.burgerMenuLogout = page.locator('#logout_sidebar_link'); // locate Logout link by its ID
-    this.burgerMenuResetAppState = page.locator('#reset_sidebar_link'); // locate Reset App State link by its ID
+    this.burgerMenuButton = page.getByRole('button', { name: /open menu/i }); // locate burger menu button by accessible role and name
+    this.burgerMenuAllItems = page.getByRole('link', { name: 'All Items' }); // locate All Items link by role and visible text
+    this.burgerMenuAbout = page.getByRole('link', { name: 'About' }); // locate About link by role and visible text
+    this.burgerMenuLogout = page.getByRole('link', { name: 'Logout' }); // locate Logout link by role and visible text
+    this.burgerMenuResetAppState = page.getByRole('link', { name: 'Reset App State' }); // locate Reset App State link by role and visible text
   }
 
   /** Opens the burger (hamburger) side menu in the header. */

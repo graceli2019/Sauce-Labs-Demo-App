@@ -15,15 +15,15 @@ export class CheckoutStepTwoPage extends BasePage { // page object for checkout 
   constructor(page: Page) {
     super(page); // call BasePage constructor to initialise shared header and burger menu locators
 
-    this.pageTitle = page.locator('.title'); // locate page title by its CSS class
-    this.orderItems = page.locator('.cart_item'); // locate all order item rows by CSS class
-    this.orderItemNames = page.locator('.inventory_item_name'); // locate all product name labels
-    this.orderItemPrices = page.locator('.inventory_item_price'); // locate all product price labels
-    this.subtotalLabel = page.locator('.summary_subtotal_label'); // locate subtotal label by its CSS class
-    this.taxLabel = page.locator('.summary_tax_label'); // locate tax label by its CSS class
-    this.totalLabel = page.locator('.summary_total_label'); // locate total label by its CSS class
-    this.cancelButton = page.locator('[data-test="cancel"]'); // locate Cancel button by data-test attribute
-    this.finishButton = page.locator('[data-test="finish"]'); // locate Finish button by data-test attribute
+    this.pageTitle = page.getByTestId('title'); // locate page title by stable test id
+    this.orderItems = page.getByTestId('inventory-item'); // locate all order rows by stable test id
+    this.orderItemNames = page.getByTestId('inventory-item-name'); // locate all order item names by stable test id
+    this.orderItemPrices = page.getByTestId('inventory-item-price'); // locate all order item prices by stable test id
+    this.subtotalLabel = page.getByText(/^Item total:/); // locate subtotal label by stable visible text prefix
+    this.taxLabel = page.getByText(/^Tax:/); // locate tax label by stable visible text prefix
+    this.totalLabel = page.getByText(/^Total:/); // locate total label by stable visible text prefix
+    this.cancelButton = page.getByRole('button', { name: 'Cancel' }); // locate Cancel button by role and name
+    this.finishButton = page.getByRole('button', { name: 'Finish' }); // locate Finish button by role and name
   }
 
   /** Clicks the Finish button to place the order and navigate to the confirmation page. */

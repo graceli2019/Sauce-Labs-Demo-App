@@ -23,9 +23,9 @@ test.describe('Inventory Page', () => { // group all inventory-related tests und
     const itemCount = await inventoryPage.getItemCount(); // get number of product cards
     for (let i = 0; i < itemCount; i++) { // iterate over each product card
       const item = inventoryPage.inventoryItems.nth(i); // get the nth product card
-      await expect(item.locator('.inventory_item_name')).toBeVisible(); // assert product name is visible
-      await expect(item.locator('.inventory_item_price')).toBeVisible(); // assert product price is visible
-      await expect(item.locator('button[data-test^="add-to-cart"]')).toBeVisible(); // assert Add to Cart button is visible
+      await expect(item.getByTestId('inventory-item-name')).toBeVisible(); // assert product name is visible
+      await expect(item.getByTestId('inventory-item-price')).toBeVisible(); // assert product price is visible
+      await expect(item.getByRole('button', { name: 'Add to cart' })).toBeVisible(); // assert Add to Cart button is visible
     }
   });
 
@@ -66,7 +66,7 @@ test.describe('Inventory Page', () => { // group all inventory-related tests und
     await inventoryPage.addItemToCartByName(PRODUCTS.backpack); // click Add to Cart for Sauce Labs Backpack
     await expect(inventoryPage.cartBadge).toHaveText('1'); // assert cart badge shows 1
     const item = inventoryPage.inventoryItems.filter({ hasText: PRODUCTS.backpack }); // find the backpack product card
-    await expect(item.locator('button[data-test^="remove"]')).toBeVisible(); // assert button changed to Remove
+    await expect(item.getByRole('button', { name: 'Remove' })).toBeVisible(); // assert button changed to Remove
   });
 
   test('TC09 - Add multiple items to cart from inventory page', async ({ inventoryPage }) => {
@@ -80,7 +80,7 @@ test.describe('Inventory Page', () => { // group all inventory-related tests und
     await inventoryPage.removeItemFromCartByName(PRODUCTS.backpack); // click Remove on that product card
     await expect(inventoryPage.cartBadge).not.toBeVisible(); // assert cart badge disappears
     const item = inventoryPage.inventoryItems.filter({ hasText: PRODUCTS.backpack }); // find the backpack product card
-    await expect(item.locator('button[data-test^="add-to-cart"]')).toBeVisible(); // assert button changed back to Add to Cart
+    await expect(item.getByRole('button', { name: 'Add to cart' })).toBeVisible(); // assert button changed back to Add to Cart
   });
 
   // ── Navigation ─────────────────────────────────────────────────────────────

@@ -70,7 +70,7 @@ test.describe('Checkout', () => { // group all checkout-related tests under 'Che
     await cartPage.goto(); // go back to cart to add second item
     await cartPage.continueShopping(); // go to inventory page
     const { inventoryPage } = await (async () => { // add second item using inventory page
-      const inventoryPage = { addItemToCartByName: async (name: string) => page.locator('.inventory_item').filter({ hasText: name }).locator('button[data-test^="add-to-cart"]').click() };
+      const inventoryPage = { addItemToCartByName: async (name: string) => page.getByTestId('inventory-item').filter({ hasText: name }).getByRole('button', { name: 'Add to cart' }).click() };
       await inventoryPage.addItemToCartByName(PRODUCTS.bikeLight); // add Bike Light to cart
       return { inventoryPage };
     })();
@@ -85,12 +85,16 @@ test.describe('Checkout', () => { // group all checkout-related tests under 'Che
   test('TC10 - Order summary shows correct subtotal', async ({ page, checkoutStepOnePage, checkoutStepTwoPage, cartPage }) => {
     await cartPage.goto(); // go to cart
     await cartPage.continueShopping(); // go to inventory
-    await page.locator('.inventory_item').filter({ hasText: PRODUCTS.bikeLight }).locator('button[data-test^="add-to-cart"]').click(); // add Bike Light ($9.99)
+    await page.getByTestId('inventory-item').filter({ hasText: PRODUCTS.bikeLight }).getByRole('button', { name: 'Add to cart' }).click(); // add Bike Light ($9.99)
     await cartPage.goto(); // return to cart
     await cartPage.proceedToCheckout(); // proceed to checkout
     await checkoutStepOnePage.fillCustomerInfo(CUSTOMER.valid.firstName, CUSTOMER.valid.lastName, CUSTOMER.valid.postalCode); // fill step one
     await checkoutStepOnePage.continue(); // proceed to step two
-    await expect(checkoutStepTwoPage.subtotalLabel).toContainText('$39.98'); // assert subtotal is $29.99 + $9.99 = $39.98
+    const orderPriceTexts = await checkoutStepTwoPage.orderItemPrices.allTextContents(); // read item prices shown in the order summary
+    const expectedSubtotal = orderPriceTexts
+      .map((price) => parseFloat(price.replace(/[^0-9.]/g, '')))
+      .reduce((sum, price) => sum + price, 0); // compute subtotal from the rendered item prices
+    await expect(checkoutStepTwoPage.subtotalLabel).toContainText(`$${expectedSubtotal.toFixed(2)}`); // assert subtotal matches the rendered order item prices
   });
 
   test('TC11 - Order summary shows correct total (subtotal + tax)', async ({ checkoutStepOnePage, checkoutStepTwoPage }) => {

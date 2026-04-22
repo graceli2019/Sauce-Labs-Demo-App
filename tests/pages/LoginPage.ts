@@ -14,13 +14,13 @@ export class LoginPage { // page object for the login page — does not extend B
   constructor(page: Page) { // constructor receives the Playwright page and assigns all locators
     this.page = page; // store the page reference for navigation in goto()
 
-    this.usernameInput = page.locator('#user-name'); // locate username input by its ID
-    this.passwordInput = page.locator('#password'); // locate password input by its ID
-    this.loginButton = page.locator('#login-button'); // locate login button by its ID
-    this.errorMessage = page.locator('[data-test="error"]'); // locate error message by data-test attribute
-    this.logo = page.locator('.login_logo'); // locate Swag Labs logo by its class
-    this.credentialsHint = page.locator('.login_credentials'); // locate accepted usernames hint by its class
-    this.passwordHint = page.locator('.login_password'); // locate password hint by its class
+    this.usernameInput = page.getByPlaceholder('Username'); // locate username input by placeholder text
+    this.passwordInput = page.getByPlaceholder('Password'); // locate password input by placeholder text
+    this.loginButton = page.getByRole('button', { name: 'Login' }); // locate Login button by role and accessible name
+    this.errorMessage = page.getByRole('heading', { name: /epic sadface:/i }); // locate login error banner by its heading text
+    this.logo = page.getByText('Swag Labs', { exact: true }); // locate logo text shown at the top of the login page
+    this.credentialsHint = page.getByText('Accepted usernames are:', { exact: false }); // locate accepted usernames hint by visible text
+    this.passwordHint = page.getByText('Password for all users:', { exact: false }); // locate password hint by visible text
   }
 
   /** Navigates directly to the login page (/). */

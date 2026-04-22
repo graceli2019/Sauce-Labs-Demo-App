@@ -1,6 +1,6 @@
 import { test, expect } from '../fixtures/pageObjects'; // import extended test runner with all page objects and expect assertion
 import { PRODUCTS } from '../fixtures/testData'; // import product name constants
-import { loginAsStandardUser, addItemsToCart, assertInventoryPageTitle } from '../fixtures/helpers'; // import reusable helper functions
+import { loginAsStandardUser, addItemsToCart, assertCartContainsItems, assertInventoryPageTitle } from '../fixtures/helpers'; // import reusable helper functions
 
 test.describe('Cart Page', () => { // group all cart-related tests under 'Cart Page'
 
@@ -24,7 +24,7 @@ test.describe('Cart Page', () => { // group all cart-related tests under 'Cart P
   test('TC03 - Cart page displays added items correctly', async ({ cartPage, page }) => {
     await addItemsToCart(page, [PRODUCTS.backpack]); // add Sauce Labs Backpack to cart
     await cartPage.goto(); // navigate to the cart page
-    await expect(cartPage.cartItemNames.filter({ hasText: PRODUCTS.backpack })).toBeVisible(); // assert backpack is listed
+    await assertCartContainsItems(cartPage, [PRODUCTS.backpack]); // assert backpack is listed
     await expect(cartPage.cartItemQuantities.first()).toHaveText('1'); // assert quantity shows 1
     await expect(cartPage.cartItemPrices.first()).toHaveText('$29.99'); // assert correct price is shown
   });
@@ -52,7 +52,7 @@ test.describe('Cart Page', () => { // group all cart-related tests under 'Cart P
     await addItemsToCart(page, [PRODUCTS.backpack, PRODUCTS.bikeLight]); // add two items
     await cartPage.goto(); // navigate to cart page
     await cartPage.removeItemByName(PRODUCTS.backpack); // remove only Sauce Labs Backpack
-    await expect(cartPage.cartItemNames.filter({ hasText: PRODUCTS.bikeLight })).toBeVisible(); // assert Bike Light remains
+    await assertCartContainsItems(cartPage, [PRODUCTS.bikeLight]); // assert Bike Light remains
     await expect(cartPage.cartItemNames.filter({ hasText: PRODUCTS.backpack })).not.toBeVisible(); // assert Backpack is gone
     await expect(cartPage.cartBadge).toHaveText('1'); // assert cart badge shows 1
   });
@@ -71,7 +71,7 @@ test.describe('Cart Page', () => { // group all cart-related tests under 'Cart P
     await cartPage.goto(); // navigate to cart page
     await cartPage.continueShopping(); // click Continue Shopping
     await cartPage.goto(); // navigate back to cart page
-    await expect(cartPage.cartItemNames.filter({ hasText: PRODUCTS.backpack })).toBeVisible(); // assert Backpack is still in cart
+    await assertCartContainsItems(cartPage, [PRODUCTS.backpack]); // assert Backpack is still in cart
   });
 
   test('TC09 - Checkout button navigates to checkout step one', async ({ cartPage, checkoutStepOnePage, page }) => {

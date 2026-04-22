@@ -13,13 +13,13 @@ export class InventoryItemPage extends BasePage { // page object for the individ
   constructor(page: Page) {
     super(page); // call BasePage constructor to initialise shared header and burger menu locators
 
-    this.itemName = page.locator('.inventory_details_name'); // locate product name by its CSS class
-    this.itemDescription = page.locator('.inventory_details_desc'); // locate product description by its CSS class
-    this.itemPrice = page.locator('.inventory_details_price'); // locate product price by its CSS class
-    this.itemImage = page.locator('.inventory_details_img'); // locate product image by its CSS class
-    this.addToCartButton = page.locator('button[data-test^="add-to-cart"]'); // locate Add to Cart button — data-test starts with 'add-to-cart'
-    this.removeButton = page.locator('button[data-test^="remove"]'); // locate Remove button — data-test starts with 'remove'
-    this.backToProductsButton = page.locator('[data-test="back-to-products"]'); // locate back button by exact data-test attribute
+    this.itemName = page.getByTestId('inventory-item-name'); // locate product name by stable test id
+    this.itemDescription = page.getByTestId('inventory-item-desc'); // locate product description by stable test id
+    this.itemPrice = page.getByTestId('inventory-item-price'); // locate product price by stable test id
+    this.itemImage = page.getByTestId('item-sauce-labs-backpack-img'); // locate product detail image by stable test id for the selected backpack page
+    this.addToCartButton = page.getByRole('button', { name: 'Add to cart' }); // locate Add to Cart button by role and name
+    this.removeButton = page.getByRole('button', { name: 'Remove' }); // locate Remove button by role and name
+    this.backToProductsButton = page.getByRole('button', { name: 'Back to products' }); // locate back button by role and name
   }
 
   /** Clicks the Add to Cart button on the product detail page. */

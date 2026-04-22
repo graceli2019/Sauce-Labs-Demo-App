@@ -1,6 +1,8 @@
 import { Page, expect } from '@playwright/test'; // import Page type for function parameter typing and expect for assertions
 import { LoginPage } from '../pages/LoginPage'; // import LoginPage to perform login actions
 import { InventoryPage } from '../pages/InventoryPage'; // import InventoryPage to add items to cart
+import { CartPage } from '../pages/CartPage'; // import CartPage for reusable cart assertions
+import { CheckoutStepTwoPage } from '../pages/CheckoutStepTwoPage'; // import CheckoutStepTwoPage for reusable summary assertions
 import { USERS } from './testData'; // import USERS constants to avoid hardcoding credentials
 
 /**
@@ -67,4 +69,22 @@ export async function assertLoginError(loginPage: LoginPage, message: string): P
  */
 export async function assertInventoryPageTitle(inventoryPage: InventoryPage): Promise<void> {
   await expect(inventoryPage.pageTitle).toHaveText('Products'); // assert page title shows 'Products'
+}
+
+/**
+ * Asserts that all expected item names are visible in the cart.
+ */
+export async function assertCartContainsItems(cartPage: CartPage, itemNames: string[]): Promise<void> {
+  for (const itemName of itemNames) { // assert each expected cart item individually for clearer failures
+    await expect(cartPage.cartItemNames.filter({ hasText: itemName })).toBeVisible();
+  }
+}
+
+/**
+ * Asserts that all expected item names are visible in the checkout order summary.
+ */
+export async function assertOrderSummaryContainsItems(checkoutStepTwoPage: CheckoutStepTwoPage, itemNames: string[]): Promise<void> {
+  for (const itemName of itemNames) { // assert each expected summary item individually for clearer failures
+    await expect(checkoutStepTwoPage.orderItemNames.filter({ hasText: itemName })).toBeVisible();
+  }
 }

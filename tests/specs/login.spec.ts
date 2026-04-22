@@ -10,21 +10,22 @@ test.describe('Login Page', () => { // group all login-related tests under 'Logi
 
   // ── Successful logins ──────────────────────────────────────────────────────
 
-  test('TC01 - Successful login with standard user', async ({ loginPage, inventoryPage }) => {
-    await loginPage.login(USERS.standard.username, USERS.standard.password); // fill in credentials and click Login
+  test('TC01 - Successful login with standard user', async ({ page, inventoryPage }) => {
+    await loginAsStandardUser(page); // log in as standard user and land on inventory page
     await assertInventoryPageTitle(inventoryPage); // assert page title shows 'Products'
   });
 
   const otherSuccessUsers = [ // test data for TC02-TC05 — same structure, different user each time
-    { tc: 'TC02', label: 'problem user',           user: USERS.problem },
+    { tc: 'TC02', label: 'problem user',            user: USERS.problem },
     { tc: 'TC03', label: 'performance glitch user', user: USERS.performanceGlitch },
     { tc: 'TC04', label: 'error user',              user: USERS.error },
     { tc: 'TC05', label: 'visual user',             user: USERS.visual },
   ];
 
   for (const { tc, label, user } of otherSuccessUsers) { // generate one test per user
-    test(`${tc} - Successful login with ${label}`, async ({ page }) => {
+    test(`${tc} - Successful login with ${label}`, async ({ page, inventoryPage }) => {
       await loginAs(page, user.username, user.password); // login with this user's credentials and land on inventory page
+      await assertInventoryPageTitle(inventoryPage); // assert inventory page title is visible after login
     });
   }
 

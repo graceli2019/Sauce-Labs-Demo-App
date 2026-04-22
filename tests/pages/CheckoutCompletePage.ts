@@ -11,11 +11,11 @@ export class CheckoutCompletePage extends BasePage { // page object for the orde
   constructor(page: Page) {
     super(page); // call BasePage constructor to initialise shared header and burger menu locators
 
-    this.pageTitle = page.locator('.title'); // locate page title by its CSS class
-    this.completeHeader = page.locator('.complete-header'); // locate confirmation heading by its CSS class
-    this.completeText = page.locator('.complete-text'); // locate confirmation body text by its CSS class
-    this.ponyExpressImage = page.locator('.pony_express'); // locate pony express image by its CSS class
-    this.backHomeButton = page.locator('[data-test="back-to-products"]'); // locate Back Home button by data-test attribute
+    this.pageTitle = page.getByTestId('title'); // locate page title by stable test id
+    this.completeHeader = page.getByRole('heading', { name: 'Thank you for your order!' }); // locate confirmation heading by role and exact text
+    this.completeText = page.getByText(/Your order has been dispatched/); // locate confirmation body text by stable visible copy
+    this.ponyExpressImage = page.getByRole('img', { name: /pony express/i }); // locate pony express image by image role and name
+    this.backHomeButton = page.getByRole('button', { name: 'Back Home' }); // locate Back Home button by role and name
   }
 
   /** Clicks the Back Home button, returning to the inventory page after a completed order. */
