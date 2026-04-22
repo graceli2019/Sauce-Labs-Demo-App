@@ -86,10 +86,41 @@ test.describe('Login Page', () => { // group all login-related tests under 'Logi
   test('TC14 - Login page UI elements are visible', async ({ loginPage }) => {
     await expect(loginPage.logo).toBeVisible(); // assert Swag Labs logo is visible
     await expect(loginPage.usernameInput).toBeVisible(); // assert username input field is visible
-    await expect(loginPage.passwordInput).toBeVisible(); // assert password input field is visible
+    await expect(loginPage.passwordInput).toBeVisible(); // assert password field is visible
     await expect(loginPage.loginButton).toBeVisible(); // assert Login button is visible
     await expect(loginPage.credentialsHint).toBeVisible(); // assert accepted usernames hint is visible
     await expect(loginPage.passwordHint).toBeVisible(); // assert password hint is visible
+  });
+
+  // ── Edge Cases ─────────────────────────────────────────────────────────────
+
+  test('TC15 - Direct URL access to inventory without login redirects to login page', async ({ page }) => {
+    await page.goto('/inventory.html'); // attempt to navigate directly to inventory without logging in
+    await expect(page).toHaveURL('/'); // assert redirected back to the login page
+  });
+
+  test('TC16 - After logout, direct URL access to inventory page is blocked', async ({ loginPage, page }) => {
+    await loginPage.login(USERS.standard.username, USERS.standard.password); // log in as standard user
+    await page.waitForURL('**/inventory.html'); // wait until inventory page is loaded
+    await page.getByRole('button', { name: 'Open Menu' }).click(); // open burger menu
+    await page.getByRole('link', { name: 'Logout' }).click(); // click Logout to end the session
+    await expect(page).toHaveURL('/'); // assert redirected to login page after logout
+    await page.goto('/inventory.html'); // attempt direct URL access to inventory after logout
+    await expect(page).toHaveURL('/'); // assert redirected back to login — session is properly invalidated
+  });
+
+  test('TC17 - Dismiss login error banner with X button clears the error', async ({ loginPage, page }) => {
+    await loginPage.login('', ''); // submit with both fields empty to trigger error
+    await expect(loginPage.errorMessage).toBeVisible(); // assert error banner is shown
+    await loginPage.errorDismissButton.click(); // click the X button to dismiss the error
+    await expect(loginPage.errorMessage).not.toBeVisible(); // assert error banner disappears after dismissal
+    await expect(page).toHaveURL('/'); // assert user remains on the login page
+  });
+
+  test('TC18 - Login with whitespace-only username is treated as invalid credentials', async ({ loginPage, page }) => {
+    await loginPage.login('   ', USERS.standard.password); // submit with whitespace-only username
+    await assertOnLoginPage(page); // assert user stays on the login page
+    await assertLoginError(loginPage, LOGIN_ERRORS.invalidCredentials); // assert whitespace is not treated as empty — app attempts auth and fails with invalid credentials
   });
 
 });

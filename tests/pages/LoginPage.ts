@@ -7,6 +7,7 @@ export class LoginPage { // page object class for the login page — does not ex
   readonly passwordInput: Locator; // password text input field
   readonly loginButton: Locator; // Login submit button
   readonly errorMessage: Locator; // error banner shown when login fails
+  readonly errorDismissButton: Locator; // X button inside the error banner to dismiss it
   readonly logo: Locator; // Swag Labs logo at the top of the login page
   readonly credentialsHint: Locator; // accepted usernames hint text at the bottom of the page
   readonly passwordHint: Locator; // password hint text at the bottom of the page
@@ -18,6 +19,7 @@ export class LoginPage { // page object class for the login page — does not ex
     this.passwordInput = page.getByPlaceholder('Password'); // locate password input by placeholder text
     this.loginButton = page.getByRole('button', { name: 'Login' }); // locate Login button by role and accessible name
     this.errorMessage = page.getByRole('heading', { name: /epic sadface:/i }); // locate login error banner by its heading text
+    this.errorDismissButton = page.getByTestId('error-button'); // locate error dismiss X button by stable test id
     this.logo = page.getByText('Swag Labs', { exact: true }); // locate logo text shown at the top of the login page
     this.credentialsHint = page.getByText('Accepted usernames are:', { exact: false }); // locate accepted usernames hint by visible text
     this.passwordHint = page.getByText('Password for all users:', { exact: false }); // locate password hint by visible text

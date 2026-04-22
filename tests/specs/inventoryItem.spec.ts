@@ -1,6 +1,6 @@
 import { test, expect } from '../fixtures/pageObjects'; // import extended test runner with all page objects and expect assertion
 import { PRODUCTS } from '../fixtures/testData'; // import product name constants
-import { loginAsStandardUser, assertInventoryPageTitle } from '../fixtures/helpers'; // import reusable login helper
+import { loginAsStandardUser, assertInventoryPageTitle, assertCartContainsItems } from '../fixtures/helpers'; // import reusable login helper
 
 test.describe('Inventory Item Page', () => { // group all product detail page tests under 'Inventory Item Page'
 
@@ -59,6 +59,26 @@ test.describe('Inventory Item Page', () => { // group all product detail page te
   test('TC07 - Navigate to cart from product detail page via cart icon', async ({ inventoryItemPage, page }) => {
     await inventoryItemPage.goToCart(); // click the cart icon in the header
     await expect(page).toHaveURL(/cart/); // assert navigated to the cart page
+  });
+
+  // ── Edge Cases ─────────────────────────────────────────────────────────────
+
+  test('TC08 - Item added from detail page appears correctly in cart', async ({ inventoryItemPage, cartPage }) => {
+    await inventoryItemPage.addToCart(); // add Sauce Labs Backpack from the detail page
+    await inventoryItemPage.goToCart(); // navigate to cart via the cart icon
+    const count = await cartPage.getCartItemCount(); // get number of items in cart
+    expect(count).toBe(1); // assert exactly 1 item is in cart
+    await assertCartContainsItems(cartPage, [PRODUCTS.backpack]); // assert the correct product is listed in cart
+  });
+
+  test('TC09 - Item added from inventory page can be removed on its detail page', async ({ inventoryPage, inventoryItemPage }) => {
+    await inventoryItemPage.backToProducts(); // return to inventory page
+    await inventoryPage.addItemToCartByName(PRODUCTS.backpack); // add Sauce Labs Backpack from the inventory page
+    await expect(inventoryPage.cartBadge).toHaveText('1'); // assert cart badge shows 1
+    await inventoryPage.clickItemByName(PRODUCTS.backpack); // navigate to the backpack detail page
+    await inventoryItemPage.removeFromCart(); // click Remove on the detail page
+    await expect(inventoryItemPage.cartBadge).not.toBeVisible(); // assert cart badge disappears
+    await expect(inventoryItemPage.addToCartButton).toBeVisible(); // assert button reverted to Add to Cart
   });
 
 });

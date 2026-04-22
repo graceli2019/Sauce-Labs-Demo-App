@@ -1,6 +1,6 @@
 import { test, expect } from '../fixtures/pageObjects'; // import extended test runner with all page objects and expect assertion
 import { PRODUCTS, CUSTOMER, CHECKOUT_ERRORS } from '../fixtures/testData'; // import product names, customer info, and error message constants
-import { loginAndAddItemsToCart, assertInventoryPageTitle } from '../fixtures/helpers'; // import reusable helper that logs in and adds items to cart
+import { loginAndAddItemsToCart, assertInventoryPageTitle, assertCartContainsItems } from '../fixtures/helpers'; // import reusable helper that logs in and adds items to cart
 
 test.describe('Checkout', () => { // group all checkout-related tests under 'Checkout'
 
@@ -156,6 +156,30 @@ test.describe('Checkout', () => { // group all checkout-related tests under 'Che
     await checkoutStepOnePage.continue(); // proceed to step two
     await checkoutStepTwoPage.finish(); // place the order
     await expect(checkoutCompletePage.completeHeader).toHaveText('Thank you for your order!'); // assert confirmation message is shown
+  });
+
+  // ── Edge Cases ─────────────────────────────────────────────────────────────
+
+  test('TC17 - Dismiss error banner with X button clears the error', async ({ checkoutStepOnePage }) => {
+    await checkoutStepOnePage.continue(); // click Continue without filling any fields to trigger validation error
+    await expect(checkoutStepOnePage.errorMessage).toBeVisible(); // assert error banner is shown
+    await checkoutStepOnePage.errorDismissButton.click(); // click the X button to dismiss the error
+    await expect(checkoutStepOnePage.errorMessage).not.toBeVisible(); // assert error banner disappears after dismissal
+  });
+
+  test('TC18 - Cart item is preserved after cancelling checkout step one', async ({ checkoutStepOnePage, cartPage, page }) => {
+    await checkoutStepOnePage.cancel(); // click Cancel on step one to return to cart
+    await expect(page).toHaveURL(/cart/); // assert navigated back to cart page
+    const count = await cartPage.getCartItemCount(); // get number of items in cart
+    expect(count).toBe(1); // assert the backpack added in beforeEach is still in cart
+    await assertCartContainsItems(cartPage, [PRODUCTS.backpack]); // assert the correct item is still listed
+  });
+
+  test('TC19 - Cart badge is correct after cancelling checkout step two', async ({ checkoutStepOnePage, checkoutStepTwoPage, inventoryPage }) => {
+    await checkoutStepOnePage.fillCustomerInfo(CUSTOMER.valid.firstName, CUSTOMER.valid.lastName, CUSTOMER.valid.postalCode); // fill step one
+    await checkoutStepOnePage.continue(); // proceed to step two
+    await checkoutStepTwoPage.cancel(); // click Cancel on step two to return to inventory
+    await expect(inventoryPage.cartBadge).toHaveText('1'); // assert cart badge still shows 1 — item not lost on cancel
   });
 
 });

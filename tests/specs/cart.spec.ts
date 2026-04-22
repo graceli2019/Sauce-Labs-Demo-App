@@ -82,4 +82,23 @@ test.describe('Cart Page', () => { // group all cart-related tests under 'Cart P
     await expect(checkoutStepOnePage.pageTitle).toHaveText('Checkout: Your Information'); // assert page title is correct
   });
 
+  // ── Edge Cases ─────────────────────────────────────────────────────────────
+
+  test('TC10 - Checkout with empty cart still navigates to step one', async ({ cartPage, checkoutStepOnePage, page }) => {
+    await cartPage.goto(); // navigate to cart without adding any items
+    await cartPage.proceedToCheckout(); // click Checkout with zero items in cart
+    await expect(page).toHaveURL(/checkout-step-one/); // assert Sauce Demo allows proceeding (no client-side guard)
+    await expect(checkoutStepOnePage.pageTitle).toHaveText('Checkout: Your Information'); // assert step one page loads
+  });
+
+  test('TC11 - Remove all items from cart leaves cart empty with no badge', async ({ cartPage, page }) => {
+    await addItemsToCart(page, [PRODUCTS.backpack, PRODUCTS.bikeLight]); // add two items
+    await cartPage.goto(); // navigate to cart page
+    await cartPage.removeItemByName(PRODUCTS.backpack); // remove first item
+    await cartPage.removeItemByName(PRODUCTS.bikeLight); // remove second item
+    const count = await cartPage.getCartItemCount(); // get updated cart item count
+    expect(count).toBe(0); // assert cart is completely empty
+    await expect(cartPage.cartBadge).not.toBeVisible(); // assert cart badge disappears when all items are removed
+  });
+
 });

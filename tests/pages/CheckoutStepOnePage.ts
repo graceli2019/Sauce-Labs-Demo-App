@@ -9,6 +9,7 @@ export class CheckoutStepOnePage extends BasePage { // page object for checkout 
   readonly cancelButton: Locator; // Cancel button — returns to the cart page
   readonly continueButton: Locator; // Continue button — proceeds to the order summary page
   readonly errorMessage: Locator; // error banner shown when required fields are empty
+  readonly errorDismissButton: Locator; // X button inside the error banner to dismiss it
 
   constructor(page: Page) {
     super(page); // call BasePage constructor to initialise shared header and burger menu locators
@@ -20,6 +21,7 @@ export class CheckoutStepOnePage extends BasePage { // page object for checkout 
     this.cancelButton = page.getByRole('button', { name: 'Cancel' }); // locate Cancel button by role and name
     this.continueButton = page.getByRole('button', { name: 'Continue' }); // locate Continue button by role and name
     this.errorMessage = page.getByRole('heading', { name: /error:/i }); // locate checkout error banner by heading text prefix
+    this.errorDismissButton = page.getByTestId('error-button'); // locate error dismiss X button by stable test id
   }
 
   /** Fills in the first name, last name, and postal code fields on the checkout info form. */

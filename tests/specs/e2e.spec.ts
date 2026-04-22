@@ -125,4 +125,31 @@ test.describe('End-to-End Journeys', () => { // group all cross-feature E2E test
     await assertOrderSummaryContainsItems(checkoutStepTwoPage, [PRODUCTS.backpack]); // assert correct product name appears in order summary
   });
 
+  // ── Session & Access Control ───────────────────────────────────────────────
+
+  test('TC08 - After logout, direct URL access to inventory is blocked', async ({
+    page, inventoryPage
+  }) => {
+    await loginAsStandardUser(page); // log in as standard user
+    await inventoryPage.logout(); // log out via the burger menu
+    await expect(page).toHaveURL('/'); // assert redirected to the login page after logout
+    await page.goto('/inventory.html'); // attempt to navigate directly to inventory without being logged in
+    await expect(page).toHaveURL('/'); // assert redirected back to login page — session is properly terminated
+  });
+
+  // ── Reset App State ────────────────────────────────────────────────────────
+
+  test('TC09 - Reset App State clears cart items and resets button states', async ({
+    page, inventoryPage
+  }) => {
+    await loginAsStandardUser(page); // log in as standard user
+    await addItemsToCart(page, [PRODUCTS.backpack, PRODUCTS.bikeLight]); // add two items to cart
+    await expect(inventoryPage.cartBadge).toHaveText('2'); // assert cart badge shows 2 before reset
+    await inventoryPage.resetAppState(); // open burger menu and click Reset App State
+    await inventoryPage.goto(); // navigate to inventory to close the burger menu and reload state
+    await expect(inventoryPage.cartBadge).not.toBeVisible(); // assert cart badge disappears after reset
+    const item = inventoryPage.inventoryItems.filter({ hasText: PRODUCTS.backpack }); // find the backpack product card
+    await expect(item.getByRole('button', { name: 'Add to cart' })).toBeVisible(); // assert Add to Cart button is restored after reset
+  });
+
 });
