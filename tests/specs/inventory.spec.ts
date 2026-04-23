@@ -14,9 +14,10 @@ test.describe('Inventory Page', () => { // group all inventory-related tests und
     await assertInventoryPageTitle(inventoryPage); // assert page title shows 'Products'
   });
 
-  test('TC02 - Inventory page displays 6 products', async ({ inventoryPage }) => {
+  test('TC02 - Inventory page displays the correct number of products', async ({ inventoryPage }) => {
+    const expectedCount = Object.values(PRODUCTS).length; // derive expected count from PRODUCTS constant — update PRODUCTS if inventory changes
     const count = await inventoryPage.getItemCount(); // get total number of product cards
-    expect(count).toBe(6); // assert exactly 6 products are displayed
+    expect(count).toBe(expectedCount); // assert displayed count matches the number of defined products
   });
 
   test('TC03 - Each product card displays name, price and Add to Cart button', async ({ inventoryPage }) => {
@@ -102,18 +103,20 @@ test.describe('Inventory Page', () => { // group all inventory-related tests und
     await expect(inventoryPage.cartBadge).not.toBeVisible(); // assert no badge shown on a fresh session
   });
 
-  test('TC14 - Add all 6 items to cart shows badge count of 6', async ({ inventoryPage }) => {
-    for (const name of Object.values(PRODUCTS)) { // iterate over all 6 product names
+  test('TC14 - Add all items to cart shows correct badge count', async ({ inventoryPage }) => {
+    const expectedCount = Object.values(PRODUCTS).length; // derive expected count from PRODUCTS constant — update PRODUCTS if inventory changes
+    for (const name of Object.values(PRODUCTS)) { // iterate over all product names
       await inventoryPage.addItemToCartByName(name); // add each product to the cart
     }
-    await expect(inventoryPage.cartBadge).toHaveText('6'); // assert badge shows 6
+    await expect(inventoryPage.cartBadge).toHaveText(String(expectedCount)); // assert badge count matches total number of products
   });
 
   // ── Sort dropdown ──────────────────────────────────────────────────────────
 
-  test('TC15 - Sort dropdown is visible and has 4 options', async ({ inventoryPage }) => {
+  test('TC15 - Sort dropdown is visible and has the correct number of options', async ({ inventoryPage }) => {
+    const expectedOptionCount = 4; // number of sort options: A-Z, Z-A, price low-high, price high-low
     await expect(inventoryPage.sortDropdown).toBeVisible(); // assert sort dropdown is present
-    await expect(inventoryPage.sortDropdown.locator('option')).toHaveCount(4); // assert exactly 4 sort options exist
+    await expect(inventoryPage.sortDropdown.locator('option')).toHaveCount(expectedOptionCount); // assert exactly 4 sort options exist
   });
 
   test('TC16 - Default sort option is A to Z', async ({ inventoryPage }) => {
