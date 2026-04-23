@@ -35,6 +35,10 @@ Keep Playwright tests reliable, debuggable, and easy to maintain.
 - Keep test data explicit and local to scenario context.
 - Reuse fixtures/helpers for setup and shared flows.
 - Avoid hidden coupling between tests through shared mutable state.
+- Derive expected values from shared constants rather than hardcoding literals.
+  - Example: use `Object.values(PRODUCTS).length` instead of `6` so test titles and assertions stay accurate when test data changes.
+  - Update the constant in one place (`testData.ts`) and all dependent tests reflect the change automatically.
+- Test titles must stay in sync with the logic — if an assertion is made dynamic, update the title to remove the hardcoded value too.
 
 ## Failure Diagnostics
 - On failure, provide context in assertion messages when practical.
