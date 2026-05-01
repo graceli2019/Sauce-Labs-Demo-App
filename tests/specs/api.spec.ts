@@ -1,9 +1,10 @@
 import { test, expect, request, APIRequestContext } from '@playwright/test';
 
-// Example: API base URL (update as needed)
+// NOTE: saucedemo.com is a front-end only demo app — it does not expose a REST API.
+// These tests are stubs and are skipped until a real API backend is available.
 const BASE_URL = 'https://www.saucedemo.com/api';
 
-test.describe('API: Authentication', () => {
+test.describe.skip('API: Authentication', () => {
   let apiContext: APIRequestContext;
 
   test.beforeAll(async ({ playwright }) => {
@@ -33,7 +34,7 @@ test.describe('API: Authentication', () => {
   });
 });
 
-test.describe('API: Inventory', () => {
+test.describe.skip('API: Inventory', () => {
   let apiContext: APIRequestContext;
   let token: string;
 
