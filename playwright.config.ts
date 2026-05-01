@@ -27,7 +27,7 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
     baseURL: 'https://www.saucedemo.com',
-    testIdAttribute: 'data-test',
+    testIdAttribute: 'data-test', // override default 'data-testid' to match Sauce Demo's HTML attribute — enables getByTestId() to locate elements by data-test
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',

@@ -1,5 +1,5 @@
 import { Page, Locator } from '@playwright/test'; // import Page and Locator types from Playwright
-import { BasePage } from './BasePage'; // import BasePage to inherit header and burger menu
+import { BasePage } from './BasePage.js'; // import BasePage to inherit header and burger menu
 
 export class InventoryPage extends BasePage { // page object for the products listing page
   readonly pageTitle: Locator; // 'Products' heading at the top of the page
