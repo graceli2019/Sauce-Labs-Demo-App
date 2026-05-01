@@ -1,0 +1,26 @@
+services:
+
+  # ── Playwright Tests ───────────────────────────────────────────────────────
+  playwright:
+    build: .
+    container_name: playwright-tests
+    # Mount playwright-report and test-results back to host so you can view them after the run
+    volumes:
+      - ./playwright-report:/app/playwright-report
+      - ./test-results:/app/test-results
+    environment:
+      - CI=true   # enables retries, single worker, and forbidOnly as defined in playwright.config.ts
+    # Run all Playwright specs by default
+    command: npx playwright test --reporter=line
+
+  # ── Cucumber BDD Tests ─────────────────────────────────────────────────────
+  cucumber:
+    build: .
+    container_name: cucumber-tests
+    environment:
+      - NODE_OPTIONS=--loader ts-node/esm --no-warnings
+    # Run all Cucumber feature files
+    command: >
+      npx cucumber-js
+      --import 'features/**/*.ts'
+      'features/**/*.feature'
