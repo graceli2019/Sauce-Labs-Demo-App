@@ -62,6 +62,8 @@ test.describe('Checkout', () => { // group all checkout-related tests under 'Che
     await expect(checkoutStepTwoPage.subtotalLabel).toBeVisible(); // assert subtotal is visible
     await expect(checkoutStepTwoPage.taxLabel).toBeVisible(); // assert tax is visible
     await expect(checkoutStepTwoPage.totalLabel).toBeVisible(); // assert total is visible
+    await expect(checkoutStepTwoPage.paymentInfo).toBeVisible(); // assert payment info 'SauceCard #31337' is visible — confirmed on live app
+    await expect(checkoutStepTwoPage.shippingInfo).toBeVisible(); // assert shipping info 'Free Pony Express Delivery!' is visible — confirmed on live app
     await expect(checkoutStepTwoPage.cancelButton).toBeVisible(); // assert Cancel button is visible
     await expect(checkoutStepTwoPage.finishButton).toBeVisible(); // assert Finish button is visible
   });
@@ -134,7 +136,7 @@ test.describe('Checkout', () => { // group all checkout-related tests under 'Che
     await checkoutStepOnePage.continue(); // proceed to step two
     await checkoutStepTwoPage.finish(); // place the order
     await expect(checkoutCompletePage.completeHeader).toHaveText('Thank you for your order!'); // assert confirmation header is correct
-    await expect(checkoutCompletePage.completeText).toBeVisible(); // assert confirmation body text is visible
+    await expect(checkoutCompletePage.completeText).toHaveText('Your order has been dispatched, and will arrive just as fast as the pony can get there!'); // assert exact confirmation body text — verified on live app
     await expect(checkoutCompletePage.ponyExpressImage).toBeVisible(); // assert pony express image is visible
   });
 

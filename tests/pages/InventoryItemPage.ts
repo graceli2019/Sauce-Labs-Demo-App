@@ -16,7 +16,7 @@ export class InventoryItemPage extends BasePage { // page object for the individ
     this.itemName = page.getByTestId('inventory-item-name'); // locate product name by stable test id
     this.itemDescription = page.getByTestId('inventory-item-desc'); // locate product description by stable test id
     this.itemPrice = page.getByTestId('inventory-item-price'); // locate product price by stable test id
-    this.itemImage = page.getByTestId('item-sauce-labs-backpack-img'); // locate product detail image by stable test id for the selected backpack page
+    this.itemImage = page.getByTestId(/^item-.*-img$/); // locate product detail image by data-test pattern — works for any product detail page
     this.addToCartButton = page.getByRole('button', { name: 'Add to cart' }); // locate Add to Cart button by role and name
     this.removeButton = page.getByRole('button', { name: 'Remove' }); // locate Remove button by role and name
     this.backToProductsButton = page.getByRole('button', { name: 'Back to products' }); // locate back button by role and name

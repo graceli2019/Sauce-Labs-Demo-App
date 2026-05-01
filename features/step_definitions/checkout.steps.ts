@@ -34,6 +34,18 @@ Then('I should see the checkout step two page', async function () {
   await expect(checkoutStepTwoPage.pageTitle).toHaveText('Checkout: Overview'); // assert step two page title
 });
 
+Then('I should see the payment info {string}', async function (paymentText) {
+  const { checkoutStepTwoPage } = getWorld(this); // get checkout step two page object from world context
+  await expect(checkoutStepTwoPage.paymentInfo).toBeVisible(); // assert payment info section is visible
+  await expect(checkoutStepTwoPage.paymentInfo).toHaveText(paymentText); // assert correct payment info is displayed — confirmed on live app
+});
+
+Then('I should see the shipping info {string}', async function (shippingText) {
+  const { checkoutStepTwoPage } = getWorld(this); // get checkout step two page object from world context
+  await expect(checkoutStepTwoPage.shippingInfo).toBeVisible(); // assert shipping info section is visible
+  await expect(checkoutStepTwoPage.shippingInfo).toHaveText(shippingText); // assert correct shipping info is displayed — confirmed on live app
+});
+
 Then('the form fields should be visible', async function () {
   const { checkoutStepOnePage } = getWorld(this); // get checkout step one page object from world context
   await expect(checkoutStepOnePage.firstNameInput).toBeVisible(); // assert first name input is visible

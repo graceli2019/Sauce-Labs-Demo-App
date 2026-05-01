@@ -27,3 +27,11 @@ Feature: Checkout
     And I fill in the form with first name "John", last name "Doe", and postal code "12345"
     And I continue checkout
     Then I should see the checkout step two page
+
+  Scenario: Checkout step two displays payment and shipping information
+    Given I am logged in and have items in my cart
+    When I proceed to checkout
+    And I fill in the form with first name "John", last name "Doe", and postal code "12345"
+    And I continue checkout
+    Then I should see the payment info "SauceCard #31337"
+    And I should see the shipping info "Free Pony Express Delivery!"

@@ -9,6 +9,8 @@ export class CheckoutStepTwoPage extends BasePage { // page object for checkout 
   readonly subtotalLabel: Locator; // subtotal row showing item prices before tax
   readonly taxLabel: Locator; // tax row showing the calculated tax amount
   readonly totalLabel: Locator; // total row showing the final amount (subtotal + tax)
+  readonly paymentInfo: Locator; // payment card info shown in the order summary (e.g. 'SauceCard #31337')
+  readonly shippingInfo: Locator; // shipping method shown in the order summary (e.g. 'Free Pony Express Delivery!')
   readonly cancelButton: Locator; // Cancel button — returns to the inventory page
   readonly finishButton: Locator; // Finish button — places the order and navigates to the confirmation page
 
@@ -22,6 +24,8 @@ export class CheckoutStepTwoPage extends BasePage { // page object for checkout 
     this.subtotalLabel = page.getByText(/^Item total:/); // locate subtotal label by stable visible text prefix
     this.taxLabel = page.getByText(/^Tax:/); // locate tax label by stable visible text prefix
     this.totalLabel = page.getByText(/^Total:/); // locate total label by stable visible text prefix
+    this.paymentInfo = page.getByText('SauceCard #31337'); // locate payment card info by its exact visible text — confirmed on live app
+    this.shippingInfo = page.getByText('Free Pony Express Delivery!'); // locate shipping info by its exact visible text — confirmed on live app
     this.cancelButton = page.getByRole('button', { name: 'Cancel' }); // locate Cancel button by role and name
     this.finishButton = page.getByRole('button', { name: 'Finish' }); // locate Finish button by role and name
   }
